@@ -19,7 +19,7 @@
 # along with SickRage. If not, see <http://www.gnu.org/licenses/>.
 
 import re
-
+import os
 import sickbeard
 from sickbeard.clients.generic import GenericClient
 
@@ -56,6 +56,30 @@ class uTorrentAPI(GenericClient):
 
         params = {'action': 'add-url', 's': result.url}
         return self._request(params=params)
+
+    def _jakes_custom_set_setting_active_download_path(self, result):
+
+        show_path = result.show.location
+        re_result = re.findall("S..E", result.name)
+        if (len(re_result) > 0):
+            show_path += "\\" + re_result[0][:-1]
+            if not os.path.exists(show_path):
+                os.makedirs(show_path)
+
+        params = {'action': 'setsetting', 's': 'dir_active_download', 'v': show_path}
+        return self._request(method='get', params=params)
+
+    def _jakes_custom_set_setting_complete_download_path(self, result):
+
+        show_path = result.show.location
+        re_result = re.findall("S..E", result.name)
+        if (len(re_result) > 0):
+            show_path += "\\" + re_result[0][:-1]
+            if not os.path.exists(show_path):
+                os.makedirs(show_path)
+
+        params = {'action': 'setsetting', 's': 'dir_completed_download', 'v': show_path}
+        return self._request(method='get', params=params)
 
     def _add_torrent_file(self, result):
 

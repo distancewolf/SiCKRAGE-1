@@ -92,6 +92,18 @@ class GenericClient(object):
         """
         return False
 
+    def _jakes_custom_set_setting_active_download_path(self, result):
+        """
+        blahblahblah
+        """
+        return False
+
+    def _jakes_custom_set_setting_complete_download_path(self, result):
+        """
+        blahblahblah
+        """
+        return False
+
     def _add_torrent_file(self, result):
         """
         This should be overridden should return the True/False from the client
@@ -179,6 +191,19 @@ class GenericClient(object):
                 return r_code
 
         try:
+            if result.show is not None:
+                logger.log(u"AAAA I IS HAXORrr " + result.show.location + " || " + result.name)
+                r_code = self._jakes_custom_set_setting_active_download_path(result)
+                if r_code:
+                    logger.log(u"AAAA active download path set")
+                # r_code = _jakes_custom_set_setting_complete_download_path
+                # if r_code:
+                #     logger.log(u"AAAA complete download path set")
+                logger.log(u"AAAA hacky sleep to ensure active download path set ")
+                time.sleep(0.5)
+                logger.log(u"AAAA hacky sleep done!")
+            else:
+                logger.log(u"AAAA no show object to hack on!")
             # Sets per provider seed ratio
             result.ratio = result.provider.seed_ratio()
 
